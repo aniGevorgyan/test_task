@@ -1,0 +1,90 @@
+<div class="calculate pb-5">
+  <h1 class="text-center pt-4 pb-lg-5 pb-4">Calculator</h1>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 col-12">
+        <div class="shadow-lg p-4 rounded-5">
+          <form [formGroup]="form" (ngSubmit)="calculate()" class="needs-validation" novalidate>
+            <div class="mb-3">
+              <label for="operand1" class="form-label">Operand 1:</label>
+              <input formControlName="operand1" type="number" class="form-control" id="operand1" placeholder="ex: 3">
+              <div
+                *ngIf="form.get('operand1')?.errors?.['required'] && (form.get('operand1')?.dirty || form.get('operand1')?.touched)"
+                class="invalid-feedback d-block">
+                Operand 1 field required
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="operand2" class="form-label">Operand 2:</label>
+              <input formControlName="operand2" type="number" class="form-control" id="operand2" placeholder="ex: 2">
+              <div class="invalid-feedback d-block"
+                   *ngIf="form.get('operand2')?.errors?.['required'] && (form.get('operand2')?.dirty || form.get('operand2')?.touched)">
+                Operand 2 field required
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="operations" class="form-label">Operations</label>
+              <select formControlName="operation" id="operations" class="form-select">
+                <option value="" selected disabled hidden>Select operations from the menu</option>
+                <option value="+">Addition (+)</option>
+                <option value="/">Division (/)</option>
+                <option value="%">Remainder (%)</option>
+                <option value="prime">Highest Prime Number</option>
+              </select>
+              <div class="invalid-feedback d-block"
+                   *ngIf="form.get('operation')?.errors?.['required'] && (form.get('operation')?.dirty || form.get('operation')?.touched)">
+                Operations field required
+              </div>
+            </div>
+            <button
+              [disabled]="
+              form.invalid ||
+              (form.get('operand1')?.value === form.get('operand2')?.value &&
+              form.get('operation')?.value === 'prime')"
+              type="submit"
+              class="btn btn-primary">Calculate
+            </button>
+            <ng-container
+              *ngIf="form.get('operation')?.value === 'prime' && (form.get('operand1')?.touched && form.get('operand1')?.value !== '')">
+              <div class="invalid-feedback d-block"
+                   *ngIf="form.get('operand1')?.value === form.get('operand2')?.value">
+                Operand 1 and Operand 2 cannot be the same number
+              </div>
+            </ng-container>
+
+          </form>
+        </div>
+
+      </div>
+      <div class="col-md-8 col-12">
+        <div class="pt-lg-0 p-lg-3 pt-5 px-2">
+          <ng-container *ngIf="calculationResult.length > 0; else notData">
+            <table class="table table-hover table-sm">
+              <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Operand 1</th>
+                <th scope="col">Operand 2</th>
+                <th scope="col">Operation</th>
+                <th scope="col">Result</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let result of calculationResult as Calculation; let id = index">
+                <th scope="row">{{id + 1}}</th>
+                <td><p class="text-truncate w-75">{{result.operand1}}</p></td>
+                <td><p class="text-truncate w-75">{{result.operand2}}</p></td>
+                <td><p class="text-truncate w-75">{{result.operation}}</p></td>
+                <td><p class="text-truncate w-75">{{result.result}}</p></td>
+              </tr>
+              </tbody>
+            </table>
+          </ng-container>
+          <ng-template #notData>
+            <h4 class="text-center fst-italic">No data yet</h4>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
